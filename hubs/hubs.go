@@ -6,8 +6,6 @@ package hubs
 
 import (
 	"encoding/json"
-
-	"github.com/pkg/errors"
 )
 
 // ClientMsg represents a message sent to the Hubs API from the client.
@@ -23,7 +21,8 @@ type ClientMsg struct {
 
 	// arguments (an array, can be empty if the method does not have any
 	// parameters)
-	A []interface{}
+	//A []interface{}
+	A json.RawMessage
 
 	// state – a dictionary containing additional custom data (optional)
 	S *json.RawMessage `json:",omitempty"`
@@ -33,34 +32,34 @@ type ClientMsg struct {
 // will perform different types of conversion based on the Golang type of the
 // "A" field. For instance, an array will be converted into a JSON object
 // looking like [...], whereas a byte array would look like "...".
-func (cm *ClientMsg) MarshalJSON() (buf []byte, err error) {
-	var args []byte
-	for _, a := range cm.A {
-		switch a.(type) {
-		case []byte:
-			args = append(args, a.([]byte)...)
-		case string:
-			args = append(args, []byte(a.(string))...)
-		default:
-			err = errors.New("unsupported argument type")
-			return
-		}
-	}
-
-	return json.Marshal(&struct {
-		I int
-		H string
-		M string
-		A []byte
-		S *json.RawMessage `json:"omitempty"`
-	}{
-		I: cm.I,
-		H: cm.H,
-		M: cm.M,
-		A: args,
-		S: cm.S,
-	})
-}
+// func (cm *ClientMsg) MarshalJSON() (buf []byte, err error) {
+// 	var args []byte
+// 	for _, a := range cm.A {
+// 		switch a.(type) {
+// 		case []byte:
+// 			args = append(args, a.([]byte)...)
+// 		case string:
+// 			args = append(args, []byte(a.(string))...)
+// 		default:
+// 			err = errors.New("unsupported argument type")
+// 			return
+// 		}
+// 	}
+//
+// 	return json.Marshal(&struct {
+// 		I int
+// 		H string
+// 		M string
+// 		A []byte
+// 		S *json.RawMessage `json:"omitempty"`
+// 	}{
+// 		I: cm.I,
+// 		H: cm.H,
+// 		M: cm.M,
+// 		A: args,
+// 		S: cm.S,
+// 	})
+// }
 
 // ServerMsg represents a message sent to the Hubs API from the server.
 type ServerMsg struct {

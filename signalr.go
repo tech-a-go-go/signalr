@@ -18,9 +18,9 @@ import (
 	"time"
 
 	scraper "github.com/carterjones/go-cloudflare-scraper"
-	"github.com/carterjones/signalr/hubs"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
+	"github.com/tech-a-go-go/signalr/hubs"
 )
 
 // Client represents a SignlR client. It manages connections so that the caller
